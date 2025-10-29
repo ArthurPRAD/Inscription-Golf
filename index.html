@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Form centré + fond</title>
+  <style>
+    /* Reset utile */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    /* CONTAINER plein écran + fond + centrage */
+    .container {
+      --color: rgba(114,114,114,0.3);
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+
+      background-color: #f1eee4;
+      background-image:
+        linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent);
+      background-size: 55px 55px;
+
+      /* variables globales du thème */
+      --input-focus: #205e08;
+      --font-color: #323232;
+      --font-color-sub: #666;
+      --bg-color: beige;
+      --main-color: black;
+      --fondvert: rgb(103,163,118);
+      --form-width: 800px;
+    }
+
+    /* FORM : largeur/hauteur pilotées par variables */
+    .form {
+      --form-width: 800px;
+      --form-height: auto;
+
+      --input-focus: #205e08;
+      --font-color: #323232;
+      --font-color-sub: #666;
+      --bg-color: beige;
+      --main-color: black;
+
+      width: min(100%, var(--form-width));
+      height: var(--form-height);
+
+      padding: 20px;
+      background: var(--fondvert);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+
+      border-radius: 5px;
+      border: 2px solid var(--main-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      font-family: "Courier New", monospace;
+    }
+
+    .title {
+      color: var(--font-color);
+      font-weight: 900;
+      font-size: 20px;
+      margin: 0 0 12px;
+    }
+    .title span {
+      color: var(--font-color-sub);
+      font-weight: 600;
+      font-size: 17px;
+    }
+
+    .input {
+      width: 100%;
+      height: 40px;
+      border-radius: 5px;
+      border: 2px solid var(--main-color);
+      background-color: var(--bg-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--font-color);
+      padding: 5px 10px;
+      outline: none;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .input::placeholder { color: var(--font-color-sub); opacity: .8; }
+    .input:focus { border-color: var(--input-focus); }
+    .input:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 5px 5px 0 var(--main-color);
+    }
+    .input:active {
+      box-shadow: 0 0 0 var(--main-color);
+      transform: translate(2px,2px);
+    }
+
+    /* Checkbox stylée (même esprit visuel) */
+    .check-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      color: var(--font-color);
+    }
+    .check { display: none; }
+    .check-box {
+      width: 24px; height: 24px; border-radius: 4px;
+      border: 2px solid var(--main-color);
+      background-color: var(--bg-color);
+      box-shadow: 3px 3px 0 var(--main-color);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .check-box:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 5px 5px 0 var(--main-color);
+    }
+    .check:checked + .check-box {
+      background-color: #d4f5c2;
+      box-shadow: 0 0 0 var(--main-color);
+      transform: translate(2px,2px);
+    }
+    .check:checked + .check-box::after {
+      content: "✓";
+      font-size: 16px;
+      color: var(--main-color);
+    }
+
+    .button-confirm {
+      margin: 10px 0 0 auto;
+      width: 140px; height: 42px;
+      border-radius: 5px;
+      border: 2px solid var(--main-color);
+      background-color: var(--bg-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      font-size: 16px; font-weight: 700; color: var(--font-color);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .button-confirm:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 5px 5px 0 var(--main-color);
+    }
+    .button-confirm:active {
+      box-shadow: 0 0 0 var(--main-color);
+      transform: translate(2px,2px);
+    }
+
+    .button-toggle {
+      margin: 10px auto 0 auto;
+      width: 140px; height: 42px;
+      border-radius: 5px;
+      margin-bottom: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--main-color);
+      background-color: var(--bg-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      font-size: 16px; font-weight: 700; color: var(--font-color);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    /* Card texte */
+    .card {
+      --card-width: var(--form-width);
+      width: min(100%, var(--card-width));
+      padding: 20px;
+      background: var(--fondvert);
+      border: 2px solid var(--main-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      border-radius: 5px;
+      font-family: "Courier New", monospace;
+      color: var(--font-color);
+      display: grid;
+      gap: 12px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      margin-bottom: 40px;
+    }
+    .card:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+    .card:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--main-color); }
+
+    .card-title { margin: 0; font-weight: 900; font-size: 40px; }
+    .card-sub   { margin: 0; color: var(--font-color-sub); font-weight: 600; font-size: 14px; }
+    .card-text  { margin: 0; line-height: 1.6; font-size: 20px; }
+
+    .card-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border: 2px solid var(--main-color);
+      background: var(--bg-color);
+      color: var(--font-color);
+      border-radius: 5px;
+      box-shadow: 3px 3px 0 var(--main-color);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* ===== Strip Hover (bloc multi-panneaux) ===== */
+    .strip-hover {
+      position: relative; /* Pour positionner le drapeau */
+      width: min(100%, var(--form-width));
+      height: 220px;
+      padding: 12px .4em .4em .4em; /* un peu d’air en haut pour le drapeau */
+      display: flex;
+      gap: 6px;
+      background: var(--fondvert);
+      border: 2px solid var(--main-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      border-radius: 5px;
+      font-family: "Courier New", monospace;
+      color: var(--font-color);
+      margin: 24px 0;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .strip-hover:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+
+    .strip-hover p {
+      position: relative;
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: 4px;
+      background: var(--bg-color);
+      border: 2px solid var(--main-color);
+      box-shadow: 3px 3px 0 var(--main-color);
+      transition: flex .5s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .strip-hover p:hover { flex: 4; }
+
+    .strip-hover p span {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: .5em 1em;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 700;
+      transition: opacity .28s ease;
+      line-height: 1.2;
+    }
+    .strip-hover .txt-default { opacity: 1; color: var(--font-color); }
+    .strip-hover .txt-hover   { opacity: 0; color: var(--input-focus); }
+
+    .strip-hover p:hover .txt-default { opacity: 0; }
+    .strip-hover p:hover .txt-hover   { opacity: 1; }
+
+    .strip-hover p:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+    .strip-hover p:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--main-color); }
+
+    @media (max-width: 600px) {
+      .strip-hover { height: 180px; }
+      .strip-hover p span { padding: .4em .8em; }
+    }
+    /* Dépliage fluide (sans JS lourd) */
+.reveal{
+  display: grid;
+  grid-template-rows: 0fr;           /* replié */
+  transition: grid-template-rows .35s ease, opacity .25s ease;
+  opacity: 0;
+}
+.reveal[data-open="true"]{
+  grid-template-rows: 1fr;           /* déplié */
+  opacity: 1;
+}
+.reveal-inner{
+  overflow: hidden;                   /* masque le contenu pendant l’ouverture */
+}
+
+/* Apparition en cascade des enfants du form */
+.form > *{
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .25s ease, transform .35s ease;
+}
+
+/* quand le panneau est ouvert, on révèle en cascade */
+.reveal[data-open="true"] .form > *{
+  opacity: 1;
+  transform: none;
+}
+
+/* décalages progressifs (ajuste au besoin) */
+.reveal[data-open="true"] .form > *:nth-child(1){ transition-delay: .05s; }
+.reveal[data-open="true"] .form > *:nth-child(2){ transition-delay: .10s; }
+.reveal[data-open="true"] .form > *:nth-child(3){ transition-delay: .15s; }
+.reveal[data-open="true"] .form > *:nth-child(4){ transition-delay: .20s; }
+.reveal[data-open="true"] .form > *:nth-child(5){ transition-delay: .25s; }
+.reveal[data-open="true"] .form > *:nth-child(6){ transition-delay: .30s; }
+
+
+      </style>
+</head>
+<script>
+  const toggleBtn = document.querySelector('.button-toggle');
+  const panel     = document.getElementById('panel');
+  const form      = document.getElementById('inscription-form');
+  const btnSubmit = document.getElementById('submit-btn');
+
+  const FLOW_URL = "https://defaultb3dbc02b0d9140758d7b30afe3ce0a.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a0dcc8b937844adf8818a5ccf463cbbe/triggers/manual/paths/invoke/?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KnoRmOvydBlDJnuR_E9-Tx7FrRUOybxSCOjTEbpu1aY";
+
+  // --- OUVERTURE PANEL AU CLIC ---
+  toggleBtn.addEventListener('click', () => {
+    panel.hidden = false;                         // devient visible
+    void panel.offsetWidth;                       // reset transition
+    panel.setAttribute('data-open','true');       // déclenche l'animation
+    toggleBtn.style.display = "none";             // on retire le bouton
+  });
+
+
+  // --- ENVOI FETCH POWER AUTOMATE ---
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const payload = {
+      nom:        document.getElementById("nom").value.trim(),
+      prenom:     document.getElementById("prenom").value.trim(),
+      email:      document.getElementById("email").value.trim(),
+      participe:  document.getElementById("participation").checked,
+      timestamp:  new Date().toISOString(),
+      source:     "kern-golf",
+      userAgent:  navigator.userAgent
+    };
+
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = "Envoi…";
+
+    try {
+      const res = await fetch(FLOW_URL, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("Erreur Power Automate");
+
+      alert("✅ Inscription envoyée !");
+      form.reset();
+
+    } catch(err){
+      console.error(err);
+      alert("❌ Envoi impossible — réessaie plus tard.");
+
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = "Let’s go →";
+    }
+  });
+</script>
+
+<body>
+  <div class="container">
+    <article class="card" aria-labelledby="card-1-title">
+      <span class="card-badge">Golf indoor</span>
+      <h3 id="card-1-title" class="card-title">Kern organise une soirée chez Birdieland !</h3>
+      <p class="card-text">
+        Envie de taper quelques balles (et peut-être de siroter un petit mojito) ? Rejoignez-nous là-bas ! Chez Birdieland, on mélange swing et détente dans un spot canon en plein Paris. Simulateurs dernière génération, espace lounge, encas gourmands… tout est réuni pour passer un super moment, que vous soyez pro du drive ou juste là pour l’apéro.
+      </p>
+      <p class="card-sub">Dernière mise à jour : aujourd’hui</p>
+      
+    </article>
+
+    <div class="strip-hover">
+      
+      <p>
+        <span class="txt-default">Où ?</span>
+        <span class="txt-hover">Birdieland Paris — 103 Rue de Réaumur, 75002</span>
+      </p>
+      <p>
+        <span class="txt-default">Quand ?</span>
+        <span class="txt-hover">Date à définir</span>
+      </p>
+      
+    </div>
+    <button type="button" class="button-toggle">Ca m'interesse</button>
+    <div id="panel" class="reveal" hidden>
+  <div class="reveal-inner">
+    <form class="form" id="inscription-form">
+  <div class="title">Pour t'inscrire c'est par ici</div>
+
+  <input class="input" id="nom"    name="nom"    placeholder="Nom"    type="text"   required />
+  <input class="input" id="prenom" name="prenom" placeholder="Prénom" type="text"   required />
+  <input class="input" id="email"  name="email"  placeholder="E-mail" type="email"  required />
+
+  <label class="check-wrap">
+    <input type="checkbox" class="check" id="participation" name="participation" required />
+    <span class="check-box"></span>
+    <span>Je participe !</span>
+  </label>
+
+  <button type="submit" class="button-confirm" id="submit-btn">Let’s go →</button>
+</form>
+    </div>
+</div>
+  </div>
+</body>
+</html>

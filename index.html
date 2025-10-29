@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Form centré + fond</title>
+  <title>KERN Golf</title>
   <style>
     /* Reset utile */
     * { box-sizing: border-box; }
@@ -37,7 +37,7 @@
 
     /* FORM : largeur/hauteur pilotées par variables */
     .form {
-      --form-width: 800px;
+      --form-width: 1500px;
       --form-height: auto;
 
       --input-focus: #205e08;
@@ -305,61 +305,123 @@
       </style>
 </head>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ===== PARAMS =====
+  const LIST_TITLE = "Inscrits Activité BirdieLand";
+  const siteUrl = (window._spPageContextInfo && _spPageContextInfo.webServerRelativeUrl) ? _spPageContextInfo.webServerRelativeUrl : "";
+
+  // ===== DOM =====
   const toggleBtn = document.querySelector('.button-toggle');
   const panel     = document.getElementById('panel');
   const form      = document.getElementById('inscription-form');
   const btnSubmit = document.getElementById('submit-btn');
 
-  const FLOW_URL = "https://defaultb3dbc02b0d9140758d7b30afe3ce0a.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a0dcc8b937844adf8818a5ccf463cbbe/triggers/manual/paths/invoke/?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KnoRmOvydBlDJnuR_E9-Tx7FrRUOybxSCOjTEbpu1aY";
+  if (!toggleBtn || !panel || !form || !btnSubmit) {
+    console.error("Éléments manquants dans le DOM");
+    return;
+  }
 
-  // --- OUVERTURE PANEL AU CLIC ---
+  // ---- 1) OUVERTURE DU FORM AU CLIC SUR “Ça m’intéresse” ----
   toggleBtn.addEventListener('click', () => {
-    panel.hidden = false;                         // devient visible
-    void panel.offsetWidth;                       // reset transition
-    panel.setAttribute('data-open','true');       // déclenche l'animation
-    toggleBtn.style.display = "none";             // on retire le bouton
+    panel.hidden = false;                 // afficher le bloc
+    void panel.offsetWidth;               // reset transition
+    panel.setAttribute('data-open','true');
+    toggleBtn.style.display = "none";     // on masque le bouton
   });
 
+  // ===== Helpers SharePoint REST =====
+  async function getRequestDigest() {
+    const res = await fetch(`${siteUrl}/_api/contextinfo`, {
+      method: "POST",
+      headers: { "Accept": "application/json;odata=nometadata" }
+    });
+    if (!res.ok) throw new Error("Impossible d'obtenir le RequestDigest");
+    const data = await res.json();
+    return data.FormDigestValue;
+  }
 
-  // --- ENVOI FETCH POWER AUTOMATE ---
+  // On lit le schéma pour trouver les InternalName (utile pour “Prénom” avec accent)
+  let fieldMapCache = null;
+  async function getFieldMap() {
+    if (fieldMapCache) return fieldMapCache;
+    const url = `${siteUrl}/_api/web/lists/getbytitle('${encodeURIComponent(LIST_TITLE)}')/fields?$select=Title,InternalName,Hidden&$filter=Hidden eq false`;
+    const res = await fetch(url, { headers: { "Accept": "application/json;odata=nometadata" }});
+    if (!res.ok) throw new Error("Impossible de lire le schéma de la liste");
+    const data = await res.json();
+    const map = {};
+    for (const f of data.value) map[f.Title] = f.InternalName;
+    fieldMapCache = map;
+    return map;
+  }
+
+  async function createItem(payload) {
+    const digest = await getRequestDigest();
+    const url = `${siteUrl}/_api/web/lists/getbytitle('${encodeURIComponent(LIST_TITLE)}')/items`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json;odata=nometadata",
+        "Content-Type": "application/json;odata=nometadata",
+        "X-RequestDigest": digest
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      throw new Error("Erreur SharePoint: " + t);
+    }
+    return res.json();
+  }
+
+  function buildPayload(fields, fieldMap) {
+    const title = `${fields.prenom} ${fields.nom}`.trim();
+
+    // InternalNames détectés (avec secours si jamais)
+    const keyNom   = fieldMap["Nom"]    || "Nom";
+    const keyPren  = fieldMap["Prénom"] || fieldMap["Prenom"] || "Prenom";
+    const keyMail  = fieldMap["Mail"]   || fieldMap["Email"]  || "Mail";
+
+    const item = { Title: title };
+    item[keyNom]  = fields.nom;
+    item[keyPren] = fields.prenom;
+    item[keyMail] = fields.email;
+    return item;
+  }
+
+  // ---- 2) SOUMISSION : création de l’item dans SharePoint ----
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
 
-    const payload = {
-      nom:        document.getElementById("nom").value.trim(),
-      prenom:     document.getElementById("prenom").value.trim(),
-      email:      document.getElementById("email").value.trim(),
-      participe:  document.getElementById("participation").checked,
-      timestamp:  new Date().toISOString(),
-      source:     "kern-golf",
-      userAgent:  navigator.userAgent
+    const fields = {
+      nom:   document.getElementById("nom").value.trim(),
+      prenom:document.getElementById("prenom").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      participation: document.getElementById("participation").checked
     };
+    if (!fields.nom || !fields.prenom || !fields.email) {
+      alert("Merci de remplir Nom, Prénom et E-mail.");
+      return;
+    }
 
     btnSubmit.disabled = true;
     btnSubmit.textContent = "Envoi…";
 
     try {
-      const res = await fetch(FLOW_URL, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("Erreur Power Automate");
+      const fieldMap = await getFieldMap();
+      const payload = buildPayload(fields, fieldMap);
+      await createItem(payload);
 
-      alert("✅ Inscription envoyée !");
+      alert("✅ Inscription enregistrée !");
       form.reset();
 
-    } catch(err){
+      // (Optionnel) On peut re-masquer le form et réafficher le bouton
+      // panel.setAttribute('data-open','false');
+      // panel.hidden = true;
+      // toggleBtn.style.display = "inline-flex";
+    } catch (err) {
       console.error(err);
-      alert("❌ Envoi impossible — réessaie plus tard.");
-
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = "Let’s go →";
-    }
-  });
-</script>
+      alert("❌ Échec de l’enregistrement dans SharePoint.\nVérifie que la page est bien h
 
 <body>
   <div class="container">

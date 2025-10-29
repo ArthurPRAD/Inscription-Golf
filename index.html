@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>KERN Golf</title>
+  <title>Form centré + fond</title>
   <style>
     /* Reset utile */
     * { box-sizing: border-box; }
@@ -37,7 +37,7 @@
 
     /* FORM : largeur/hauteur pilotées par variables */
     .form {
-      --form-width: 1500px;
+      --form-width: 800px;
       --form-height: auto;
 
       --input-focus: #205e08;
@@ -421,7 +421,16 @@ document.addEventListener('DOMContentLoaded', () => {
       // toggleBtn.style.display = "inline-flex";
     } catch (err) {
       console.error(err);
-      alert("❌ Échec de l’enregistrement dans SharePoint.\nVérifie que la page est bien h
+      alert("❌ Échec de l’enregistrement dans SharePoint.\nVérifie que la page est bien hébergée dans SharePoint et que la liste/colonnes existent.");
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = "Let’s go →";
+    }
+  });
+});
+</script>
+
+
 
 <body>
   <div class="container">

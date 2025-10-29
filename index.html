@@ -35,7 +35,7 @@
       --form-width: 800px;
     }
 
-    /* FORM : largeur/hauteur pilotées par variables */
+    /* FORM / WRAPPER visuel du panneau (on garde l'esprit) */
     .form {
       --form-width: 800px;
       --form-height: auto;
@@ -100,16 +100,8 @@
       transform: translate(2px,2px);
     }
 
-    /* Checkbox stylée (même esprit visuel) */
-    .check-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      user-select: none;
-      font-weight: 600;
-      color: var(--font-color);
-    }
+    /* Checkbox stylée (conservée si besoin ailleurs) */
+    .check-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-weight: 600; color: var(--font-color); }
     .check { display: none; }
     .check-box {
       width: 24px; height: 24px; border-radius: 4px;
@@ -119,20 +111,9 @@
       display: flex; align-items: center; justify-content: center;
       transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
-    .check-box:hover {
-      transform: translate(-2px,-2px);
-      box-shadow: 5px 5px 0 var(--main-color);
-    }
-    .check:checked + .check-box {
-      background-color: #d4f5c2;
-      box-shadow: 0 0 0 var(--main-color);
-      transform: translate(2px,2px);
-    }
-    .check:checked + .check-box::after {
-      content: "✓";
-      font-size: 16px;
-      color: var(--main-color);
-    }
+    .check-box:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+    .check:checked + .check-box { background-color: #d4f5c2; box-shadow: 0 0 0 var(--main-color); transform: translate(2px,2px); }
+    .check:checked + .check-box::after { content: "✓"; font-size: 16px; color: var(--main-color); }
 
     .button-confirm {
       margin: 10px 0 0 auto;
@@ -145,18 +126,12 @@
       cursor: pointer;
       transition: transform .2s ease, box-shadow .2s ease;
     }
-    .button-confirm:hover {
-      transform: translate(-2px,-2px);
-      box-shadow: 5px 5px 0 var(--main-color);
-    }
-    .button-confirm:active {
-      box-shadow: 0 0 0 var(--main-color);
-      transform: translate(2px,2px);
-    }
+    .button-confirm:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+    .button-confirm:active { box-shadow: 0 0 0 var(--main-color); transform: translate(2px,2px); }
 
     .button-toggle {
       margin: 10px auto 0 auto;
-      width: 140px; height: 42px;
+      width: 180px; height: 42px;
       border-radius: 5px;
       margin-bottom: 16px;
       display: inline-flex;
@@ -207,10 +182,10 @@
 
     /* ===== Strip Hover (bloc multi-panneaux) ===== */
     .strip-hover {
-      position: relative; /* Pour positionner le drapeau */
+      position: relative;
       width: min(100%, var(--form-width));
       height: 220px;
-      padding: 12px .4em .4em .4em; /* un peu d’air en haut pour le drapeau */
+      padding: 12px .4em .4em .4em;
       display: flex;
       gap: 6px;
       background: var(--fondvert);
@@ -265,172 +240,39 @@
       .strip-hover { height: 180px; }
       .strip-hover p span { padding: .4em .8em; }
     }
-    /* Dépliage fluide (sans JS lourd) */
-.reveal{
-  display: grid;
-  grid-template-rows: 0fr;           /* replié */
-  transition: grid-template-rows .35s ease, opacity .25s ease;
-  opacity: 0;
-}
-.reveal[data-open="true"]{
-  grid-template-rows: 1fr;           /* déplié */
-  opacity: 1;
-}
-.reveal-inner{
-  overflow: hidden;                   /* masque le contenu pendant l’ouverture */
-}
 
-/* Apparition en cascade des enfants du form */
-.form > *{
-  opacity: 0;
-  transform: translateY(-8px);
-  transition: opacity .25s ease, transform .35s ease;
-}
+    /* Dépliage fluide */
+    .reveal{
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .35s ease, opacity .25s ease;
+      opacity: 0;
+    }
+    .reveal[data-open="true"]{ grid-template-rows: 1fr; opacity: 1; }
+    .reveal-inner{ overflow: hidden; }
 
-/* quand le panneau est ouvert, on révèle en cascade */
-.reveal[data-open="true"] .form > *{
-  opacity: 1;
-  transform: none;
-}
+    /* Apparition en cascade des enfants du form */
+    .form > *{
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity .25s ease, transform .35s ease;
+    }
+    .reveal[data-open="true"] .form > *{ opacity: 1; transform: none; }
+    .reveal[data-open="true"] .form > *:nth-child(1){ transition-delay: .05s; }
+    .reveal[data-open="true"] .form > *:nth-child(2){ transition-delay: .10s; }
+    .reveal[data-open="true"] .form > *:nth-child(3){ transition-delay: .15s; }
+    .reveal[data-open="true"] .form > *:nth-child(4){ transition-delay: .20s; }
 
-/* décalages progressifs (ajuste au besoin) */
-.reveal[data-open="true"] .form > *:nth-child(1){ transition-delay: .05s; }
-.reveal[data-open="true"] .form > *:nth-child(2){ transition-delay: .10s; }
-.reveal[data-open="true"] .form > *:nth-child(3){ transition-delay: .15s; }
-.reveal[data-open="true"] .form > *:nth-child(4){ transition-delay: .20s; }
-.reveal[data-open="true"] .form > *:nth-child(5){ transition-delay: .25s; }
-.reveal[data-open="true"] .form > *:nth-child(6){ transition-delay: .30s; }
-
-
-      </style>
+    /* Style de l'iframe pour rester dans l'esprit visuel */
+    .iframe-skin {
+      width: 100%;
+      border: 2px solid var(--main-color);
+      background: var(--bg-color);
+      box-shadow: 4px 4px 0 var(--main-color);
+      border-radius: 5px;
+    }
+  </style>
 </head>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // ===== PARAMS =====
-  const LIST_TITLE = "Inscrits Activité BirdieLand";
-  const siteUrl = (window._spPageContextInfo && _spPageContextInfo.webServerRelativeUrl) ? _spPageContextInfo.webServerRelativeUrl : "";
-
-  // ===== DOM =====
-  const toggleBtn = document.querySelector('.button-toggle');
-  const panel     = document.getElementById('panel');
-  const form      = document.getElementById('inscription-form');
-  const btnSubmit = document.getElementById('submit-btn');
-
-  if (!toggleBtn || !panel || !form || !btnSubmit) {
-    console.error("Éléments manquants dans le DOM");
-    return;
-  }
-
-  // ---- 1) OUVERTURE DU FORM AU CLIC SUR “Ça m’intéresse” ----
-  toggleBtn.addEventListener('click', () => {
-    panel.hidden = false;                 // afficher le bloc
-    void panel.offsetWidth;               // reset transition
-    panel.setAttribute('data-open','true');
-    toggleBtn.style.display = "none";     // on masque le bouton
-  });
-
-  // ===== Helpers SharePoint REST =====
-  async function getRequestDigest() {
-    const res = await fetch(`${siteUrl}/_api/contextinfo`, {
-      method: "POST",
-      headers: { "Accept": "application/json;odata=nometadata" }
-    });
-    if (!res.ok) throw new Error("Impossible d'obtenir le RequestDigest");
-    const data = await res.json();
-    return data.FormDigestValue;
-  }
-
-  // On lit le schéma pour trouver les InternalName (utile pour “Prénom” avec accent)
-  let fieldMapCache = null;
-  async function getFieldMap() {
-    if (fieldMapCache) return fieldMapCache;
-    const url = `${siteUrl}/_api/web/lists/getbytitle('${encodeURIComponent(LIST_TITLE)}')/fields?$select=Title,InternalName,Hidden&$filter=Hidden eq false`;
-    const res = await fetch(url, { headers: { "Accept": "application/json;odata=nometadata" }});
-    if (!res.ok) throw new Error("Impossible de lire le schéma de la liste");
-    const data = await res.json();
-    const map = {};
-    for (const f of data.value) map[f.Title] = f.InternalName;
-    fieldMapCache = map;
-    return map;
-  }
-
-  async function createItem(payload) {
-    const digest = await getRequestDigest();
-    const url = `${siteUrl}/_api/web/lists/getbytitle('${encodeURIComponent(LIST_TITLE)}')/items`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Accept": "application/json;odata=nometadata",
-        "Content-Type": "application/json;odata=nometadata",
-        "X-RequestDigest": digest
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      const t = await res.text().catch(() => "");
-      throw new Error("Erreur SharePoint: " + t);
-    }
-    return res.json();
-  }
-
-  function buildPayload(fields, fieldMap) {
-    const title = `${fields.prenom} ${fields.nom}`.trim();
-
-    // InternalNames détectés (avec secours si jamais)
-    const keyNom   = fieldMap["Nom"]    || "Nom";
-    const keyPren  = fieldMap["Prénom"] || fieldMap["Prenom"] || "Prenom";
-    const keyMail  = fieldMap["Mail"]   || fieldMap["Email"]  || "Mail";
-
-    const item = { Title: title };
-    item[keyNom]  = fields.nom;
-    item[keyPren] = fields.prenom;
-    item[keyMail] = fields.email;
-    return item;
-  }
-
-  // ---- 2) SOUMISSION : création de l’item dans SharePoint ----
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
-
-    const fields = {
-      nom:   document.getElementById("nom").value.trim(),
-      prenom:document.getElementById("prenom").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      participation: document.getElementById("participation").checked
-    };
-    if (!fields.nom || !fields.prenom || !fields.email) {
-      alert("Merci de remplir Nom, Prénom et E-mail.");
-      return;
-    }
-
-    btnSubmit.disabled = true;
-    btnSubmit.textContent = "Envoi…";
-
-    try {
-      const fieldMap = await getFieldMap();
-      const payload = buildPayload(fields, fieldMap);
-      await createItem(payload);
-
-      alert("✅ Inscription enregistrée !");
-      form.reset();
-
-      // (Optionnel) On peut re-masquer le form et réafficher le bouton
-      // panel.setAttribute('data-open','false');
-      // panel.hidden = true;
-      // toggleBtn.style.display = "inline-flex";
-    } catch (err) {
-      console.error(err);
-      alert("❌ Échec de l’enregistrement dans SharePoint.\nVérifie que la page est bien hébergée dans SharePoint et que la liste/colonnes existent.");
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = "Let’s go →";
-    }
-  });
-});
-</script>
-
-
 
 <body>
   <div class="container">
@@ -441,11 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
         Envie de taper quelques balles (et peut-être de siroter un petit mojito) ? Rejoignez-nous là-bas ! Chez Birdieland, on mélange swing et détente dans un spot canon en plein Paris. Simulateurs dernière génération, espace lounge, encas gourmands… tout est réuni pour passer un super moment, que vous soyez pro du drive ou juste là pour l’apéro.
       </p>
       <p class="card-sub">Dernière mise à jour : aujourd’hui</p>
-      
     </article>
 
     <div class="strip-hover">
-      
       <p>
         <span class="txt-default">Où ?</span>
         <span class="txt-hover">Birdieland Paris — 103 Rue de Réaumur, 75002</span>
@@ -454,28 +294,66 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="txt-default">Quand ?</span>
         <span class="txt-hover">Date à définir</span>
       </p>
-      
     </div>
-    <button type="button" class="button-toggle">Ca m'interesse</button>
+
+    <button type="button" class="button-toggle">Ça m'intéresse</button>
+
     <div id="panel" class="reveal" hidden>
-  <div class="reveal-inner">
-    <form class="form" id="inscription-form">
-  <div class="title">Pour t'inscrire c'est par ici</div>
+      <div class="reveal-inner">
+        <!-- ⚠️ On garde la "form" comme WRAPPER visuel uniquement -->
+        <div class="form" id="msforms-wrapper">
+          <div class="title">Pour t'inscrire, c'est par ici <span>(via Microsoft Forms)</span></div>
 
-  <input class="input" id="nom"    name="nom"    placeholder="Nom"    type="text"   required />
-  <input class="input" id="prenom" name="prenom" placeholder="Prénom" type="text"   required />
-  <input class="input" id="email"  name="email"  placeholder="E-mail" type="email"  required />
+          <!-- ⭐️⭐️ PLACE ICI TON URL EMBED ⭐️⭐️
+               Remplace VOTRE_URL_EMBED_MS_FORMS par l'URL "Intégrer" (embed) fournie par Microsoft Forms,
+               par ex. https://forms.office.com/Pages/ResponsePage.aspx?id=XXXX&embed=true -->
+          <iframe
+            id="msforms"
+            class="iframe-skin"
+            title="Inscription"
+            src="<iframe width="640px" height="480px" src="https://forms.office.com/Pages/ResponsePage.aspx?id=rPMwSxfTzUuJ73g5tdoN1jPKCrH_yrtEkPhudLpN5t9URERLNUZRRzlKNEtINFhaWk00NTVXSlJWQy4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; max-width:100%; max-height:100vh" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen> </iframe>"  <!-- ← ICI TON URL EMBED -->
+            width="100%"
+            height="900"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen>
+          </iframe>
 
-  <label class="check-wrap">
-    <input type="checkbox" class="check" id="participation" name="participation" required />
-    <span class="check-box"></span>
-    <span>Je participe !</span>
-  </label>
-
-  <button type="submit" class="button-confirm" id="submit-btn">Let’s go →</button>
-</form>
+          <p class="card-sub" style="margin:0;">
+            Si le formulaire ne s’affiche pas, 
+            <!-- ⭐️⭐️ ET ICI TON URL CLASSIQUE (non-embed) ⭐️⭐️ -->
+            <a id="forms-link" href="VOTRE_URL_MS_FORMS_CLASSIQUE" target="_blank" rel="noopener">ouvre-le dans un nouvel onglet</a>.
+          </p>
+        </div>
+      </div>
     </div>
-</div>
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn  = document.querySelector('.button-toggle');
+    const panel      = document.getElementById('panel');
+    const iframe     = document.getElementById('msforms');
+    const fallback   = document.getElementById('forms-link');
+
+    if (!toggleBtn || !panel || !iframe) return;
+
+    // Ouvre le panneau au clic (animation + masquage du bouton)
+    toggleBtn.addEventListener('click', () => {
+      panel.hidden = false;
+      void panel.offsetWidth;
+      panel.setAttribute('data-open','true');
+      toggleBtn.style.display = "none";
+    });
+
+    // (Optionnel) si tu veux vérifier que l'iframe charge bien
+    iframe.addEventListener('load', () => {
+      // console.log('Microsoft Forms chargé');
+    });
+  });
+  </script>
 </body>
 </html>

@@ -1,360 +1,423 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Inscription KERN Golf</title>
-  <style>
-    /* Reset utile */
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Initiation Golf - BirdieLand × KERN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #141c14;
+    --green: #2c5f3a;
+    --green-mid: #3d7a4e;
+    --green-light: #e8f2eb;
+    --gold: #b8963e;
+    --cream: #faf8f4;
+    --muted: #7a8a7c;
+    --border: #dde8de;
+  }
 
-    /* CONTAINER plein écran + fond + centrage */
-    .container {
-      --color: rgba(114,114,114,0.3);
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Outfit', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
 
-      background-color: #f1eee4;
-      background-image:
-        linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent);
-      background-size: 55px 55px;
+  .top-bar { height: 4px; background: linear-gradient(90deg, var(--green), var(--gold), var(--green)); }
 
-      /* variables globales du thème */
-      --input-focus: #205e08;
-      --font-color: #323232;
-      --font-color-sub: #666;
-      --bg-color: beige;
-      --main-color: black;
-      --fondvert: rgb(103,163,118);
-      --form-width: 800px;
-    }
+  .page { max-width: 600px; margin: 0 auto; padding: 48px 28px 80px; }
 
-    /* FORM / WRAPPER visuel du panneau (on garde l'esprit) */
-    .form {
-      --form-width: 16000px;
-      --form-height: auto;
+  /* HEADER */
+  .header { margin-bottom: 44px; }
 
-      --input-focus: #205e08;
-      --font-color: #323232;
-      --font-color-sub: #666;
-      --bg-color: beige;
-      --main-color: black;
+  .logo-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+  .kern-logo { display: flex; align-items: center; gap: 10px; }
+  .kern-logo svg { width: 44px; height: auto; }
+  .kern-wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .kern-name { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--ink); }
+  .kern-sub { font-size: 10px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .badge-sondage { font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); background: white; border: 1px solid var(--border); padding: 5px 12px; border-radius: 20px; }
 
-      width: min(100%, var(--form-width));
-      height: var(--form-height);
+  .header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 7vw, 54px); font-weight: 600; line-height: 1.1; color: var(--ink); }
+  .header h1 span { color: var(--green); font-style: italic; }
 
-      padding: 20px;
-      background: var(--fondvert);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 20px;
+  .header-meta { display: flex; align-items: center; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .header-location { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: var(--muted); }
+  .header-location::before { content: '📍'; font-size: 12px; }
+  .header-org { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .header-org::before { content: '·'; }
 
-      border-radius: 5px;
-      border: 2px solid var(--main-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      font-family: "Courier New", monospace;
-    }
+  /* BIRDIELAND ACCORDION */
+  .bl-card { background: white; border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 44px; }
 
-    .title {
-      color: var(--font-color);
-      font-weight: 900;
-      font-size: 20px;
-      margin: 0 0 12px;
-    }
-    .title span {
-      color: var(--font-color-sub);
-      font-weight: 600;
-      font-size: 17px;
-    }
+  .bl-toggle { width: 100%; background: var(--green); border: none; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; gap: 12px; }
+  .bl-toggle-left { display: flex; align-items: center; gap: 12px; }
+  .bl-toggle-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
+  .bl-toggle h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: white; line-height: 1.2; }
+  .bl-toggle p { font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 300; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+  .bl-chevron { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s ease, background 0.2s; color: white; font-size: 13px; }
+  .bl-toggle:hover .bl-chevron { background: rgba(255,255,255,0.25); }
+  .bl-toggle[aria-expanded="true"] .bl-chevron { transform: rotate(180deg); }
 
-    .input {
-      width: 100%;
-      height: 40px;
-      border-radius: 5px;
-      border: 2px solid var(--main-color);
-      background-color: var(--bg-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--font-color);
-      padding: 5px 10px;
-      outline: none;
-      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-    }
-    .input::placeholder { color: var(--font-color-sub); opacity: .8; }
-    .input:focus { border-color: var(--input-focus); }
-    .input:hover {
-      transform: translate(-2px,-2px);
-      box-shadow: 5px 5px 0 var(--main-color);
-    }
-    .input:active {
-      box-shadow: 0 0 0 var(--main-color);
-      transform: translate(2px,2px);
-    }
+  .bl-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+  .bl-body.open { max-height: 600px; opacity: 1; }
+  .bl-body-inner { padding: 22px 24px; }
 
-    /* Checkbox stylée (conservée si besoin ailleurs) */
-    .check-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-weight: 600; color: var(--font-color); }
-    .check { display: none; }
-    .check-box {
-      width: 24px; height: 24px; border-radius: 4px;
-      border: 2px solid var(--main-color);
-      background-color: var(--bg-color);
-      box-shadow: 3px 3px 0 var(--main-color);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
-    }
-    .check-box:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
-    .check:checked + .check-box { background-color: #d4f5c2; box-shadow: 0 0 0 var(--main-color); transform: translate(2px,2px); }
-    .check:checked + .check-box::after { content: "✓"; font-size: 16px; color: var(--main-color); }
+  .bl-intro { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 20px; }
+  .bl-intro strong { color: var(--ink); font-weight: 500; }
 
-    .button-confirm {
-      margin: 10px 0 0 auto;
-      width: 140px; height: 42px;
-      border-radius: 5px;
-      border: 2px solid var(--main-color);
-      background-color: var(--bg-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      font-size: 16px; font-weight: 700; color: var(--font-color);
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .button-confirm:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
-    .button-confirm:active { box-shadow: 0 0 0 var(--main-color); transform: translate(2px,2px); }
+  .bl-features { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .bl-feat { display: flex; align-items: flex-start; gap: 10px; padding: 12px 13px; background: var(--green-light); border-radius: 10px; }
+  .bl-feat-icon { font-size: 17px; flex-shrink: 0; line-height: 1.3; }
+  .bl-feat-text strong { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 1px; }
+  .bl-feat-text span { font-size: 12px; color: var(--muted); font-weight: 300; line-height: 1.4; }
 
-    .button-toggle {
-      margin: 10px auto 0 auto;
-      width: 180px; height: 42px;
-      border-radius: 5px;
-      margin-bottom: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--main-color);
-      background-color: var(--bg-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      font-size: 16px; font-weight: 700; color: var(--font-color);
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
+  .bl-address { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px; background: var(--cream); border-radius: 10px; border: 1px solid var(--border); }
+  .bl-address-text { font-size: 13px; color: var(--ink); }
+  .bl-address-text span { display: block; font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 1px; }
+  .bl-link { font-size: 12px; color: var(--green); font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(44,95,58,0.3); padding-bottom: 1px; white-space: nowrap; transition: border-color 0.2s; }
+  .bl-link:hover { border-color: var(--green); }
 
-    /* Card texte */
-    .card {
-      --card-width: var(--form-width);
-      width: min(100%, var(--card-width));
-      padding: 20px;
-      background: var(--fondvert);
-      border: 2px solid var(--main-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      border-radius: 5px;
-      font-family: "Courier New", monospace;
-      color: var(--font-color);
-      display: grid;
-      gap: 12px;
-      transition: transform .2s ease, box-shadow .2s ease;
-      margin-bottom: 40px;
-    }
-    .card:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
-    .card:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--main-color); }
+  /* SECTION DIVIDER */
+  .section-divider { display: flex; align-items: center; gap: 14px; margin: 40px 0 32px; }
+  .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section-divider span { font-size: 11px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 
-    .card-title { margin: 0; font-weight: 900; font-size: 40px; }
-    .card-sub   { margin: 0; color: var(--font-color-sub); font-weight: 600; font-size: 14px; }
-    .card-text  { margin: 0; line-height: 1.6; font-size: 20px; }
+  /* FORM */
+  .section { margin-bottom: 32px; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+  .section-question { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+  .section-hint { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 16px; }
 
-    .card-badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border: 2px solid var(--main-color);
-      background: var(--bg-color);
-      color: var(--font-color);
-      border-radius: 5px;
-      box-shadow: 3px 3px 0 var(--main-color);
-      font-weight: 700;
-      font-size: 12px;
-    }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    /* ===== Strip Hover (bloc multi-panneaux) ===== */
-    .strip-hover {
-      position: relative;
-      width: min(100%, var(--form-width));
-      height: 220px;
-      padding: 12px .4em .4em .4em;
-      display: flex;
-      gap: 6px;
-      background: var(--fondvert);
-      border: 2px solid var(--main-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      border-radius: 5px;
-      font-family: "Courier New", monospace;
-      color: var(--font-color);
-      margin: 24px 0;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .strip-hover:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
+  .field { width: 100%; padding: 13px 18px; font-family: 'Outfit', sans-serif; font-size: 15px; color: var(--ink); background: white; border: 1.5px solid var(--border); border-radius: 10px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(44,95,58,0.08); }
+  .field::placeholder { color: #b5c0b7; }
 
-    .strip-hover p {
-      position: relative;
-      flex: 1;
-      height: 100%;
-      display: flex;
-      align-items: center; justify-content: center;
-      overflow: hidden;
-      cursor: pointer;
-      border-radius: 4px;
-      background: var(--bg-color);
-      border: 2px solid var(--main-color);
-      box-shadow: 3px 3px 0 var(--main-color);
-      transition: flex .5s ease, box-shadow .2s ease, transform .2s ease;
-    }
-    .strip-hover p:hover { flex: 4; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { display: flex; align-items: center; gap: 13px; padding: 13px 16px; background: white; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+  .opt:hover { border-color: var(--green-mid); background: var(--green-light); }
+  .opt:has(input:checked) { border-color: var(--green); background: var(--green-light); }
+  .opt:has(input:checked) .opt-label { font-weight: 500; color: var(--green); }
+  .opt input { appearance: none; width: 18px; height: 18px; border: 2px solid #c5d4c7; border-radius: 50%; flex-shrink: 0; transition: all 0.2s; position: relative; cursor: pointer; }
+  .opt input:checked { background: var(--green); border-color: var(--green); }
+  .opt input[type="radio"]:checked::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .opt-label { font-size: 14px; color: var(--ink); line-height: 1.4; }
 
-    .strip-hover p span {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: .5em 1em;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      font-weight: 700;
-      transition: opacity .28s ease;
-      line-height: 1.2;
-    }
-    .strip-hover .txt-default { opacity: 1; color: var(--font-color); }
-    .strip-hover .txt-hover   { opacity: 0; color: var(--input-focus); }
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 
-    .strip-hover p:hover .txt-default { opacity: 0; }
-    .strip-hover p:hover .txt-hover   { opacity: 1; }
+  /* CALENDAR */
+  .calendar-wrap { background: white; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .cal-header { background: var(--green); padding: 14px 20px; text-align: center; }
+  .cal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: white; }
+  .cal-legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--cream); }
+  .cal-legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+  .legend-dot.dispo { background: var(--green); }
+  .legend-dot.ferie { background: #fffbea; border: 1.5px solid #f0c040; }
+  .legend-dot.off { background: #f0f0f0; border: 1.5px solid #ddd; }
+  .cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); padding: 10px 12px 4px; gap: 3px; }
+  .cal-day-name { text-align: center; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 12px 14px; gap: 3px; }
 
-    .strip-hover p:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--main-color); }
-    .strip-hover p:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--main-color); }
+  .cal-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; cursor: default; border: 1.5px solid transparent; position: relative; user-select: none; background: #f0f0f0; color: #ccc; transition: all 0.15s ease; }
+  .cal-cell.clickable { background: white; border-color: var(--border); color: var(--ink); cursor: pointer; }
+  .cal-cell.clickable:hover { border-color: var(--green-mid); background: var(--green-light); }
+  .cal-cell.ferie { background: #fffbea; border-color: #f0c040; color: var(--ink); cursor: pointer; }
+  .cal-cell.ferie:hover { background: #fff3cd; }
+  .cal-cell.weekend { background: #f5f5f5; color: #bbb; border-color: transparent; cursor: default; }
+  .cal-cell.selected { background: var(--green) !important; border-color: var(--green) !important; color: white !important; }
+  .cal-cell.selected .ferie-label { color: rgba(255,255,255,0.75) !important; }
 
-    @media (max-width: 600px) {
-      .strip-hover { height: 180px; }
-      .strip-hover p span { padding: .4em .8em; }
-    }
+  .day-num { font-size: 14px; line-height: 1; font-weight: 400; }
+  .ferie-label { font-size: 7px; text-align: center; line-height: 1.1; margin-top: 2px; color: var(--gold); font-weight: 500; }
 
-    /* Dépliage fluide */
-    .reveal{
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows .35s ease, opacity .25s ease;
-      opacity: 0;
-    }
-    .reveal[data-open="true"]{ grid-template-rows: 1fr; opacity: 1; }
-    .reveal-inner{ overflow: hidden; }
+  .cal-footer { padding: 11px 16px; background: var(--green-light); border-top: 1px solid var(--border); font-size: 13px; color: var(--green); font-weight: 500; min-height: 42px; display: flex; align-items: center; gap: 6px; }
+  .cal-footer .soft { color: var(--muted); font-weight: 300; }
 
-    /* Apparition en cascade des enfants du form */
-    .form > *{
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: opacity .25s ease, transform .35s ease;
-    }
-    .reveal[data-open="true"] .form > *{ opacity: 1; transform: none; }
-    .reveal[data-open="true"] .form > *:nth-child(1){ transition-delay: .05s; }
-    .reveal[data-open="true"] .form > *:nth-child(2){ transition-delay: .10s; }
-    .reveal[data-open="true"] .form > *:nth-child(3){ transition-delay: .15s; }
-    .reveal[data-open="true"] .form > *:nth-child(4){ transition-delay: .20s; }
+  /* SUBMIT */
+  .submit-wrap { margin-top: 40px; }
+  .btn-submit { width: 100%; padding: 16px; background: var(--green); color: white; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+  .btn-submit:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(44,95,58,0.22); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit.loading { opacity: 0.7; pointer-events: none; }
+  .btn-submit.loading::after { content: ''; display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin-left: 10px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Style de l'iframe pour rester dans l'esprit visuel */
-    .iframe-skin {
-      width: 100%;
-      border: 2px solid var(--main-color);
-      background: var(--bg-color);
-      box-shadow: 4px 4px 0 var(--main-color);
-      border-radius: 5px;
-    }
-  </style>
+  .error-msg { display: none; margin-top: 12px; font-size: 13px; color: #c0392b; padding: 10px 14px; background: #fdf0ee; border-radius: 8px; border: 1px solid #f5c6c0; }
+
+  /* SUCCESS */
+  .success { display: none; text-align: center; padding: 60px 20px; }
+  .success-icon { font-size: 48px; margin-bottom: 20px; }
+  .success h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--green); margin-bottom: 12px; }
+  .success p { font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+
+  /* FOOTER */
+  .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--green); font-style: italic; }
+  .footer-note { font-size: 12px; color: var(--muted); font-weight: 300; }
+
+  @media (max-width: 480px) {
+    .page { padding: 32px 16px 60px; }
+    .bl-features, .field-row { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; gap: 8px; text-align: center; }
+    .day-num { font-size: 12px; }
+    .ferie-label { font-size: 6px; }
+  }
+</style>
 </head>
-
 <body>
-  <div class="container">
-    <article class="card" aria-labelledby="card-1-title">
-      <span class="card-badge">Golf indoor</span>
-      <h3 id="card-1-title" class="card-title">Kern organise une soirée chez Birdieland !</h3>
-      <p class="card-text">
-        Envie de taper quelques balles (et peut-être de siroter un petit mojito) ? Rejoignez-nous là-bas ! Chez Birdieland, on mélange swing et détente dans un spot canon en plein Paris. Simulateurs dernière génération, espace lounge, encas gourmands… tout est réuni pour passer un super moment, que vous soyez pro du drive ou juste là pour l’apéro.
-      </p>
-      <p class="card-sub">Dernière mise à jour : aujourd’hui</p>
-    </article>
 
-    <div class="strip-hover">
-      <p>
-        <span class="txt-default">Où ?</span>
-        <span class="txt-hover">Birdieland Paris — 103 Rue de Réaumur, 75002</span>
-      </p>
-      <p>
-        <span class="txt-default">Quand ?</span>
-        <span class="txt-hover">Date à définir</span>
-      </p>
+<div class="top-bar"></div>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-row">
+      <div class="kern-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="45" viewBox="0 0 101.905 95.8751">
+          <g>
+            <path style="fill:rgb(78%,78%,78%)" d="M 46.6875 14.007812 C 50.59375 13.695312 54.539062 14.015625 58.3125 14.980469 C 62.8125 16.125 67.066406 18.164062 70.765625 20.929688 C 73.476562 22.960938 75.882812 25.378906 77.898438 28.082031 L 82.261719 28.082031 C 79.671875 24.277344 76.414062 20.949219 72.679688 18.300781 C 68.5625 15.386719 63.882812 13.296875 58.988281 12.1875 C 54.941406 11.261719 50.757812 11.027344 46.648438 11.441406 C 46.730469 11.898438 46.78125 12.363281 46.78125 12.84375 C 46.78125 13.242188 46.742188 13.628906 46.6875 14.007812"/>
+            <path style="fill:rgb(78%,78%,78%)" d="M 20.609375 28.0625 C 23.894531 23.785156 28.121094 20.347656 32.84375 17.929688 C 32.421875 17.425781 32.0625 16.867188 31.773438 16.265625 C 31.265625 16.5625 30.761719 16.867188 30.269531 17.191406 C 26.113281 19.886719 22.53125 23.40625 19.757812 27.445312 C 19.617188 27.65625 19.484375 27.871094 19.34375 28.082031 L 20.59375 28.082031 C 20.601562 28.074219 20.605469 28.070312 20.609375 28.0625"/>
+            <path style="fill:rgb(78%,78%,78%)" d="M 76.089844 71.851562 C 70.738281 77.902344 63.367188 82.050781 55.390625 83.425781 C 46.523438 84.996094 36.988281 83.265625 29.109375 78.210938 C 26.394531 76.464844 23.910156 74.316406 21.753906 71.851562 L 19.773438 71.851562 C 21.910156 75.027344 24.511719 77.914062 27.539062 80.375 C 31.425781 83.535156 35.992188 85.949219 40.910156 87.34375 C 42.152344 87.625 43.390625 87.953125 44.648438 88.1875 C 45.917969 88.339844 47.1875 88.558594 48.46875 88.648438 C 49.75 88.664062 51.035156 88.707031 52.324219 88.695312 L 56.171875 88.367188 C 61.265625 87.613281 66.238281 85.847656 70.644531 83.136719 C 75.058594 80.433594 78.890625 76.816406 81.863281 72.609375 C 82.039062 72.359375 82.199219 72.105469 82.367188 71.851562 Z"/>
+            <path style="fill:rgb(50%,80%,16%)" d="M 19.59375 43.828125 L 27.960938 55.921875 L 22.425781 55.921875 L 16.691406 47.292969 L 13.375 51.460938 L 13.375 55.921875 L 8.628906 55.921875 L 8.628906 33.085938 L 13.375 33.085938 L 13.375 45.851562 L 22.5625 33.085938 L 27.34375 33.085938 Z"/>
+            <path style="fill:rgb(50%,80%,16%)" d="M 47.359375 55.921875 L 38.753906 55.921875 C 36.019531 55.921875 34.101562 55.476562 32.996094 54.589844 C 31.890625 53.703125 31.339844 52.136719 31.339844 49.890625 L 31.339844 33.085938 L 47.359375 33.085938 L 47.359375 37.0625 L 36.085938 37.0625 L 36.085938 42.417969 L 43.976562 42.417969 L 43.636719 46.394531 L 36.085938 46.394531 L 36.085938 49.570312 C 36.085938 50.46875 36.304688 51.089844 36.734375 51.429688 C 37.167969 51.773438 37.953125 51.941406 39.09375 51.941406 L 47.359375 51.941406 Z"/>
+            <path style="fill:rgb(50%,80%,16%)" d="M 63.699219 42.753906 C 64.347656 42.101562 64.671875 41.289062 64.671875 40.316406 C 64.671875 39.34375 64.359375 38.558594 63.734375 37.960938 C 63.105469 37.359375 62.269531 37.0625 61.222656 37.0625 L 58.867188 37.0625 C 57.453125 37.0625 56.75 37.734375 56.75 39.082031 L 56.75 43.734375 L 61.222656 43.734375 C 62.226562 43.734375 63.050781 43.40625 63.699219 42.753906 M 70.410156 55.921875 L 64.910156 55.921875 L 60.164062 47.453125 L 56.75 47.453125 L 56.75 55.921875 L 52.003906 55.921875 L 52.003906 37.992188 C 52.003906 36.28125 52.425781 35.035156 53.265625 34.253906 C 54.109375 33.476562 55.519531 33.085938 57.5 33.085938 L 61.53125 33.085938 C 63.945312 33.085938 65.863281 33.773438 67.285156 35.152344 C 68.710938 36.53125 69.421875 38.28125 69.421875 40.398438 C 69.421875 41.9375 68.992188 43.269531 68.140625 44.390625 C 67.285156 45.511719 66.230469 46.289062 64.980469 46.714844 Z"/>
+            <path style="fill:rgb(50%,80%,16%)" d="M 93.292969 33.085938 L 93.292969 53.609375 C 93.292969 54.316406 93.066406 54.921875 92.609375 55.421875 C 92.152344 55.925781 91.621094 56.175781 91.003906 56.175781 C 89.433594 56.175781 88.148438 55.320312 87.144531 53.609375 L 78.742188 41.261719 L 78.742188 55.921875 L 73.996094 55.921875 L 73.996094 33.085938 L 78.574219 33.085938 L 88.546875 48.03125 L 88.546875 33.085938 Z"/>
+            <path style="fill:rgb(50%,80%,16%)" d="M 44.050781 12.816406 C 44.050781 15.714844 41.703125 18.0625 38.804688 18.0625 C 35.90625 18.0625 33.554688 15.714844 33.554688 12.816406 C 33.554688 9.914062 35.90625 7.566406 38.804688 7.566406 C 41.703125 7.566406 44.050781 9.914062 44.050781 12.816406"/>
+          </g>
+        </svg>
+        <div class="kern-wordmark">
+          <span class="kern-name">Kern</span>
+          <span class="kern-sub">Sondage interne</span>
+        </div>
+      </div>
+      <div class="badge-sondage">Mai 2026</div>
     </div>
 
-    <button type="button" class="button-toggle">Ça m'intéresse</button>
+    <h1>⛳ Soirée <span>initiation</span><br>au golf</h1>
+    <div class="header-meta">
+      <div class="header-location">BirdieLand, Paris</div>
+      <div class="header-org">Organisé par KERN</div>
+    </div>
+  </div>
 
-    <div id="panel" class="reveal" hidden>
-      <div class="reveal-inner">
-        <!-- ⚠️ On garde la "form" comme WRAPPER visuel uniquement -->
-        <div class="form" id="msforms-wrapper">
-          <div class="title">Pour t'inscrire, c'est par ici :</div>
-
-          <!-- ⭐️⭐️ PLACE ICI TON URL EMBED ⭐️⭐️
-               Remplace VOTRE_URL_EMBED_MS_FORMS par l'URL "Intégrer" (embed) fournie par Microsoft Forms,
-               par ex. https://forms.office.com/Pages/ResponsePage.aspx?id=XXXX&embed=true -->
-         <iframe
-  id="msforms"
-  class="iframe-skin"
-  title="Inscription"
-  src="https://forms.office.com/Pages/ResponsePage.aspx?id=rPMwSxfTzUuJ73g5tdoN1jPKCrH_yrtEkPhudLpN5t9URERLNUZRRzlKNEtINFhaWk00NTVXSlJWQy4u&embed=true"
-  width="100%"
-  height="900"
-  frameborder="0"
-  marginheight="0"
-  marginwidth="0"
-  allowfullscreen
-  webkitallowfullscreen
-  mozallowfullscreen>
-</iframe>
-
-
-          <p class="card-sub" style="margin:0;">
-            Si le formulaire ne s’affiche pas, 
-            <!-- ⭐️⭐️ ET ICI TON URL CLASSIQUE (non-embed) ⭐️⭐️ -->
-            <a id="forms-link" href="https://forms.office.com/e/2r6G7hGh5Q" target="_blank" rel="noopener">ouvre-le dans un nouvel onglet</a>.
-          </p>
+  <!-- BIRDIELAND ACCORDION -->
+  <div class="bl-card">
+    <button class="bl-toggle" id="blToggle" aria-expanded="false" aria-controls="blBody" type="button">
+      <div class="bl-toggle-left">
+        <div class="bl-toggle-icon">⛳</div>
+        <div>
+          <h2>C'est quoi BirdieLand ?</h2>
+          <p>Clique pour découvrir le lieu · Paris 2e &amp; 8e</p>
+        </div>
+      </div>
+      <div class="bl-chevron">▾</div>
+    </button>
+    <div class="bl-body" id="blBody" role="region">
+      <div class="bl-body-inner">
+        <p class="bl-intro">
+          BirdieLand, c'est un <strong>club de golf en plein cœur de Paris</strong>, sans contrainte météo et sans dress code. L'idée : rendre le golf accessible à tous dans une ambiance <strong>bar lounge à l'anglaise</strong>. Simulateurs high-tech, cocktails, et planches à partager.<br><br>
+          Pas besoin d'avoir déjà touché un club - leurs coachs PGA s'occupent de tout.
+        </p>
+        <div class="bl-features">
+          <div class="bl-feat"><div class="bl-feat-icon">🖥️</div><div class="bl-feat-text"><strong>5 simulateurs Trackman</strong><span>500+ parcours mythiques dans le monde</span></div></div>
+          <div class="bl-feat"><div class="bl-feat-icon">🏌️</div><div class="bl-feat-text"><strong>Coachs certifiés PGA</strong><span>Initiation pour tous niveaux</span></div></div>
+          <div class="bl-feat"><div class="bl-feat-icon">🍹</div><div class="bl-feat-text"><strong>Bar &amp; snacking</strong><span>Cocktails, tapas, ambiance décontractée</span></div></div>
+          <div class="bl-feat"><div class="bl-feat-icon">👥</div><div class="bl-feat-text"><strong>Jusqu'à 8 personnes</strong><span>Par simulateur - idéal en groupe</span></div></div>
+        </div>
+        <div class="bl-address">
+          <div class="bl-address-text">103 rue Réaumur, Paris 2e<span>Également au 64 rue La Boétie, Paris 8e</span></div>
+          <a href="https://www.birdieland.club" target="_blank" class="bl-link">Voir le site →</a>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleBtn  = document.querySelector('.button-toggle');
-    const panel      = document.getElementById('panel');
-    const iframe     = document.getElementById('msforms');
-    const fallback   = document.getElementById('forms-link');
+  <div class="section-divider"><span>Ton avis</span></div>
 
-    if (!toggleBtn || !panel || !iframe) return;
+  <form id="surveyForm">
 
-    // Ouvre le panneau au clic (animation + masquage du bouton)
-    toggleBtn.addEventListener('click', () => {
-      panel.hidden = false;
-      void panel.offsetWidth;
-      panel.setAttribute('data-open','true');
-      toggleBtn.style.display = "none";
-    });
+    <!-- Q1 Identité -->
+    <div class="section">
+      <div class="section-label">01. Identité</div>
+      <div class="section-question">Ton nom ?</div>
+      <div class="field-row">
+        <input class="field" type="text" name="prenom" placeholder="Prénom" required autocomplete="given-name" />
+        <input class="field" type="text" name="nom" placeholder="Nom" required autocomplete="family-name" />
+      </div>
+    </div>
 
-    // (Optionnel) si tu veux vérifier que l'iframe charge bien
-    iframe.addEventListener('load', () => {
-      // console.log('Microsoft Forms chargé');
-    });
+    <hr class="divider">
+
+    <!-- Q2 Intérêt -->
+    <div class="section">
+      <div class="section-label">02. Intérêt</div>
+      <div class="section-question">Tu serais partant(e) pour cette soirée ?</div>
+      <div class="options">
+        <label class="opt"><input type="radio" name="interet" value="oui" required><span class="opt-label">Oui, je suis partant(e) !</span></label>
+        <label class="opt"><input type="radio" name="interet" value="peut-etre"><span class="opt-label">Peut-être, ça dépend de la date</span></label>
+        <label class="opt"><input type="radio" name="interet" value="non"><span class="opt-label">Non, pas pour moi cette fois</span></label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Q3 Niveau -->
+    <div class="section">
+      <div class="section-label">03. Niveau golf</div>
+      <div class="section-question">T'en es où au golf ?</div>
+      <div class="options">
+        <label class="opt"><input type="radio" name="niveau" value="jamais-joue" required><span class="opt-label">Jamais touché un club de ma vie</span></label>
+        <label class="opt"><input type="radio" name="niveau" value="debutant"><span class="opt-label">Débutant - j'ai déjà essayé</span></label>
+        <label class="opt"><input type="radio" name="niveau" value="intermediaire"><span class="opt-label">Intermédiaire - je joue de temps en temps</span></label>
+        <label class="opt"><input type="radio" name="niveau" value="confirme"><span class="opt-label">Confirmé - je joue régulièrement</span></label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Q4 Calendrier -->
+    <div class="section">
+      <div class="section-label">04. Disponibilités</div>
+      <div class="section-question">Tu es dispo quels jours en mai ?</div>
+      <div class="section-hint">Clique sur les jours où t'es libre - plusieurs dates possibles.</div>
+
+      <div class="calendar-wrap">
+        <div class="cal-header"><div class="cal-title">Mai 2026</div></div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><div class="legend-dot dispo"></div>Sélectionné</div>
+          <div class="cal-legend-item"><div class="legend-dot ferie"></div>Jour férié</div>
+          <div class="cal-legend-item"><div class="legend-dot off"></div>Week-end</div>
+        </div>
+        <div class="cal-days-header">
+          <div class="cal-day-name">Lun</div>
+          <div class="cal-day-name">Mar</div>
+          <div class="cal-day-name">Mer</div>
+          <div class="cal-day-name">Jeu</div>
+          <div class="cal-day-name">Ven</div>
+          <div class="cal-day-name">Sam</div>
+          <div class="cal-day-name">Dim</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-footer" id="calFooter"><span class="soft">Aucune date sélectionnée</span></div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit" id="submitBtn">Envoyer mes réponses</button>
+      <div class="error-msg" id="errorMsg">Une erreur est survenue. Merci de réessayer dans quelques instants.</div>
+    </div>
+
+  </form>
+
+  <div class="success" id="successMsg">
+    <div class="success-icon">⛳</div>
+    <h2>Merci !</h2>
+    <p>Tes réponses ont bien été enregistrées.<br>On te tient au courant dès que la date est fixée.</p>
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">BirdieLand × KERN</div>
+    <div class="footer-note">Usage interne</div>
+  </div>
+
+</div>
+
+<script>
+  // ACCORDION
+  const toggle = document.getElementById('blToggle');
+  const body   = document.getElementById('blBody');
+  toggle.addEventListener('click', () => {
+    const open = body.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
   });
-  </script>
+
+  // CALENDAR
+  const START_DOW  = 4;
+  const TOTAL_DAYS = 31;
+  const HOLIDAYS   = { 1: '1er mai', 8: '8 mai', 14: 'Ascension', 25: 'Pentecôte' };
+  const selected   = new Set();
+  const grid       = document.getElementById('calGrid');
+  const footer     = document.getElementById('calFooter');
+
+  function dow(d)       { return (START_DOW + d - 1) % 7; }
+  function isWeekend(d) { const w = dow(d); return w === 5 || w === 6; }
+
+  for (let i = 0; i < START_DOW; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-cell';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= TOTAL_DAYS; d++) {
+    const el      = document.createElement('div');
+    const holiday = HOLIDAYS[d];
+    const weekend = isWeekend(d);
+
+    if (weekend)      el.className = 'cal-cell weekend';
+    else if (holiday) el.className = 'cal-cell ferie clickable';
+    else              el.className = 'cal-cell clickable';
+
+    el.innerHTML = `<span class="day-num">${d}</span>${holiday ? `<span class="ferie-label">${holiday}</span>` : ''}`;
+    el.dataset.day = d;
+
+    if (!weekend) {
+      el.addEventListener('click', () => {
+        const day = +el.dataset.day;
+        if (selected.has(day)) { selected.delete(day); el.classList.remove('selected'); }
+        else                   { selected.add(day);    el.classList.add('selected'); }
+        updateFooter();
+      });
+    }
+    grid.appendChild(el);
+  }
+
+  function updateFooter() {
+    if (selected.size === 0) {
+      footer.innerHTML = '<span class="soft">Aucune date sélectionnée</span>';
+    } else {
+      const sorted = [...selected].sort((a, b) => a - b);
+      footer.innerHTML = `✓ <strong>${selected.size} date${selected.size > 1 ? 's' : ''}</strong> &nbsp;·&nbsp; <span class="soft">${sorted.map(d => `${d} mai`).join(', ')}</span>`;
+    }
+  }
+
+  // FORM SUBMIT
+  const WEBHOOK_URL = 'REMPLACER_PAR_VOTRE_URL_POWER_AUTOMATE';
+  const form        = document.getElementById('surveyForm');
+  const btn         = document.getElementById('submitBtn');
+  const errorMsg    = document.getElementById('errorMsg');
+  const successMsg  = document.getElementById('successMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sorted = [...selected].sort((a, b) => a - b);
+    const payload = {
+      prenom:         form.prenom.value.trim(),
+      nom:            form.nom.value.trim(),
+      interet:        form.querySelector('input[name="interet"]:checked')?.value || '',
+      niveau:         form.querySelector('input[name="niveau"]:checked')?.value || '',
+      disponibilites: sorted.length ? sorted.map(d => `${d} mai 2026`).join(', ') : 'Non renseigné',
+      date_reponse:   new Date().toLocaleString('fr-FR')
+    };
+
+    btn.classList.add('loading');
+    btn.textContent = 'Envoi en cours';
+    errorMsg.style.display = 'none';
+
+    try {
+      const res = await fetch("https://default4b30f3acd3174bcd89ef7839b5da0d.d6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4649570f35eb4532a9ed9bd3e4088f28/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Koiodivr751TcUfnoYh72FCqpGQQ2BPJMHjAZu9j4Cs", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error();
+      form.style.display = 'none';
+      successMsg.style.display = 'block';
+    } catch {
+      btn.classList.remove('loading');
+      btn.textContent = 'Envoyer mes réponses';
+      errorMsg.style.display = 'block';
+    }
+  });
+</script>
 </body>
 </html>

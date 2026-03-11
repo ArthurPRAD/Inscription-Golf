@@ -381,7 +381,7 @@
   }
 
   // FORM SUBMIT
-  const WEBHOOK_URL = 'REMPLACER_PAR_VOTRE_URL_POWER_AUTOMATE';
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbx40GjNZx6w0ZC8huwDZk50Ww-92RhNrUbkx0cljMNxtaCzwcc5YYfaTalk6kP1B5Y0ww/exec';
   const form        = document.getElementById('surveyForm');
   const btn         = document.getElementById('submitBtn');
   const errorMsg    = document.getElementById('errorMsg');
@@ -404,12 +404,12 @@
     errorMsg.style.display = 'none';
 
     try {
-      const res = await fetch("https://default4b30f3acd3174bcd89ef7839b5da0d.d6.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4649570f35eb4532a9ed9bd3e4088f28/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Koiodivr751TcUfnoYh72FCqpGQQ2BPJMHjAZu9j4Cs", {
+      await fetch(WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error();
       form.style.display = 'none';
       successMsg.style.display = 'block';
     } catch {
